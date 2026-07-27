@@ -1,4 +1,4 @@
-Para el desarrollo del modelo de pronóstico de la frecuencia y la duración de interrupciones eléctricas (variables proxy asociadas a SAIDI y SAIFI), se utilizará una base de datos histórica de eventos de falla reportados en el sistema de distribución. La tabla principal consolidada tiene $N = 87{,}007{,}074$ observaciones ($A = 47{,}649$ activos eléctricos únicos $\times$ $T = 1{,}826$ días), correspondientes al panel \textbf{activo $\times$ día} entre el $1$ de enero de $2021$ y el $31$ de diciembre de $2025$.
+Para el desarrollo del modelo de pronóstico de la frecuencia y la duración de interrupciones eléctricas (variables proxy asociadas a SAIDI y SAIFI), se utilizará una base de datos histórica de eventos de falla reportados en el sistema de distribución. La tabla principal consolidada tiene $N = 87{.}007{.}074$ observaciones ($A = 47{.}649$ activos eléctricos únicos $\times$ $T = 1{.}826$ días), correspondientes al panel \textbf{activo $\times$ día} entre el $1$ de enero de $2021$ y el $31$ de diciembre de $2025$.
 
 \paragraph{Tiempo o periodo de estudio.}
 El periodo de estudio abarca desde el $1$ de enero de $2021$ hasta el $31$ de diciembre de $2025$.
@@ -40,7 +40,7 @@ Las variables de eventos se definen así:
 
 El dataset final incluye las variables agrupadas por bloque temático, como se resume en la Tabla~\ref{tab:estructura_dataset_consolidado}.
 
-\begin{table}[H]
+\begin{table}[!htpb]
 \centering
 \small
 \caption{Estructura del dataset consolidado (grano activo $\times$ día).}
@@ -92,7 +92,7 @@ Variables objetivo &
 \paragraph{Número de observaciones.}
 La tabla consolidada final se estima como
 \[
-\text{Total de observaciones} = 47{,}649 \times 1{,}826 = 87{,}007{,}074,
+\text{Total de observaciones} = 47{.}649 \times 1{.}826 = 87{.}007{.}074,
 \]
 correspondiente a cinco años de información a nivel elemento-día.
 
@@ -102,6 +102,6 @@ correspondiente a cinco años de información a nivel elemento-día.
 La empresa origen de los datos operativos y técnicos es \textbf{Centrales Eléctricas de Norte de Santander S.A E.S.P (Cens S.A E.S.P)}.
 
 \paragraph{Lugar donde se registra la información.}
-Sistemas corporativos (BRAE, OMS y GIS). Para variables climatológicas se utiliza la fuente institucional externa Nasa Power.
+Sistemas corporativos (BRAE, OMS y GIS). Para variables climatológicas se utiliza la fuente institucional externa NASA POWER~\textcite{ref48}.
 
 La información se registra en la red de distribución eléctrica de Norte de Santander, con soporte de localización geográfica por activo y por cuadrante.
