@@ -123,7 +123,7 @@ En este trabajo, la unidad de análisis del modelado es el par \textbf{cuadrante
     \item \textbf{Impacto posterior} (descriptivo / severidad): \texttt{usuarios\_afectados}, \texttt{elementos\_afectados} y, en general, métricas que solo se conocen al ocurrir o cerrar el evento. Sirven para describir severidad en el EDA y para perfiles territoriales; \textbf{no} se emplean como predictoras contemporáneas de $Y$ o $Y'$ en la misma semana~$t$. Análogamente, $\texttt{duracion\_total}_t$ es respuesta cuando se pronostica continuidad, pero constituye fuga si se incluye como covariable al modelar $\texttt{n\_eventos}_t$.
 \end{enumerate}
 
-El vector climático de referencia ---sujeto a la regla de disponibilidad del grupo~1--- es
+El vector climático de referencia, sujeto a la regla de disponibilidad del grupo~1, es
 \begin{equation}
 \mathbf{x} = \bigl(
 \texttt{precip\_total\_semana},\;
