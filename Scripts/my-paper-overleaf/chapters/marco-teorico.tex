@@ -115,7 +115,15 @@
 \subsection{Métodos y modelos}
 \label{sec:metodos-modelos}
 
-En este trabajo, la unidad de análisis del modelado es el par \textbf{cuadrante $\times$ semana} sobre $D_{\mathrm{mod}}$ (2024--2025). La \textbf{variable respuesta} principal es $Y = \texttt{n\_eventos}$ (proxy de frecuencia de interrupciones, asociada conceptualmente a SAIFI) y, de forma complementaria, $Y' = \texttt{duracion\_total}$ (proxy de duración acumulada, asociada a SAIDI). El vector de \textbf{predictoras climáticas} propuesto es
+En este trabajo, la unidad de análisis del modelado es el par \textbf{cuadrante $\times$ semana} sobre $D_{\mathrm{mod}}$ (2024--2025). Para evitar \textbf{fuga de información} en el pronóstico, las variables del panel se separan en tres grupos mutuamente excluyentes según su disponibilidad temporal respecto de la semana~$t$ a predecir:
+
+\begin{enumerate}
+    \item \textbf{Disponibles antes del periodo a pronosticar} (candidatas a predictoras): clima \emph{rezagado} ($t-1,\ldots,t-h$) o \emph{pronosticado} para~$t$ cuando exista un forecast operativo \emph{ex ante}; histórico de eventos del cuadrante (y vecinos, si aplica); características del cuadrante (altitud, tipología de zona, número de activos, usuarios totales del inventario); estacionalidad y calendario; rezagos de $Y$ o $Y'$. El clima contemporáneo de la semana~$t$ solo entra como predictora si está disponible \emph{antes} de observar los eventos de~$t$; en el EDA se usa como asociación descriptiva, no como garantía de usabilidad predictiva.
+    \item \textbf{Variables respuesta:} $Y = \texttt{n\_eventos}$ (proxy de frecuencia, asociada conceptualmente a SAIFI) y, de forma complementaria, $Y' = \texttt{duracion\_total}$ (proxy de duración acumulada, asociada a SAIDI). Los indicadores regulatorios SAIDI/SAIFI solo se emplean como $Y$ si se reconstruyen con la fórmula CREG; en este trabajo se modelan los proxies anteriores.
+    \item \textbf{Impacto posterior} (descriptivo / severidad): \texttt{usuarios\_afectados}, \texttt{elementos\_afectados} y, en general, métricas que solo se conocen al ocurrir o cerrar el evento. Sirven para describir severidad en el EDA y para perfiles territoriales; \textbf{no} se emplean como predictoras contemporáneas de $Y$ o $Y'$ en la misma semana~$t$. Análogamente, $\texttt{duracion\_total}_t$ es respuesta cuando se pronostica continuidad, pero constituye fuga si se incluye como covariable al modelar $\texttt{n\_eventos}_t$.
+\end{enumerate}
+
+El vector climático de referencia, sujeto a la regla de disponibilidad del grupo~1, es
 \begin{equation}
 \mathbf{x} = \bigl(
 \texttt{precip\_total\_semana},\;
@@ -124,7 +132,7 @@ En este trabajo, la unidad de análisis del modelado es el par \textbf{cuadrante
 \texttt{viento\_medio\_semana}
 \bigr),
 \end{equation}
-eventualmente enriquecido con rezagos temporales de $Y$ y términos de estratificación territorial. A continuación se formalizan los métodos empleados en el EDA y en la preparación/modelado.
+eventualmente enriquecido con rezagos temporales de $Y$ (o $Y'$) y términos de estratificación territorial. A continuación se formalizan los métodos empleados en el EDA y en la preparación/modelado.
 
 \begin{enumerate}
     \item \textbf{Datos faltantes, tipos e imputación:}
@@ -133,6 +141,13 @@ eventualmente enriquecido con rezagos temporales de $Y$ y términos de estratifi
     p_j^{\mathrm{NA}} = \frac{1}{N}\sum_{i=1}^{N}\mathbf{1}\{X_{ij}=\texttt{NA}\}.
     \]
     En el panel activo~$\times$~día, los \texttt{NA} se concentran en el bloque climático y en \texttt{ALTITUD}; en la tabla agregada cuadrante~$\times$~semana ($D_{\mathrm{EDA}}$, $D_{\mathrm{mod}}$) no se observan faltantes. Las reglas de imputación o exclusión se aplican en la Etapa~4 solo donde $p_j^{\mathrm{NA}}>0$ en el grano de origen, conforme a los criterios de tratamiento de datos incompletos de \textcite{ref49}.
+
+    \item \textbf{Dispersión relativa (coeficiente de variación):}
+    Para comparar la variabilidad de variables cuantitativas con distintas unidades o escalas, se emplea el coeficiente de variación
+    \[
+    \mathrm{CV}(X)=\frac{s_X}{\bar{x}},\qquad \bar{x}\neq 0,
+    \]
+    donde $s_X$ es la desviación estándar muestral y $\bar{x}$ la media. Valores de $\mathrm{CV}$ cercanos a cero indican dispersión baja respecto a la media; valores $\mathrm{CV}\gtrsim 1$ señalan alta heterogeneidad relativa. En variables cero-infladas (p.\,ej.\ métricas de interrupción), el CV del panel completo queda inflado por la masa en cero, por lo que se reporta también el CV condicionado a observaciones con valor positivo.
 
     \item \textbf{Análisis de atípicos y extremos:}
     Para una variable cuantitativa $X$, se emplean reglas basadas en cuartiles, siguiendo el criterio de rango intercuartílico propuesto por \textcite{ref50}. Con $Q_1$ y $Q_3$ los cuartiles e $\mathrm{IQR}=Q_3-Q_1$, se marcan como extremos candidatos los valores
@@ -164,8 +179,7 @@ eventualmente enriquecido con rezagos temporales de $Y$ y términos de estratifi
     \[
     \rho_S(X,Y)=1-\frac{6\sum_{i=1}^{n}d_i^{2}}{n(n^{2}-1)},
     \]
-    donde $d_i$ es la diferencia de rangos. El par de mayor interés es
-    $(\texttt{precip\_total\_semana},\,\texttt{n\_eventos})$, con $\rho_S\approx 0{.}41$ en $D_{\mathrm{mod}}$. Entre variables cualitativas se emplea el estadístico $V$ de Cramér~\textcite{ref54}. Para el agrupamiento jerárquico de covariables se usa la distancia $d=1-|\rho_S|$.
+    donde $d_i$ es la diferencia de rangos. En $D_{\mathrm{mod}}$, el par climático de mayor magnitud frente a \texttt{n\_eventos} es $(\texttt{viento\_max\_semana},\,\texttt{n\_eventos})$ con $\rho_S\approx 0{.}14$, mientras el par de mayor interés conceptual, $(\texttt{precip\_total\_semana},\,\texttt{n\_eventos})$, alcanza $\rho_S\approx 0{.}07$. Entre variables cualitativas se emplea el estadístico $V$ de Cramér~\textcite{ref54}. Para el agrupamiento jerárquico de covariables se usa la distancia $d=1-|\rho_S|$.
 
     \item \textbf{Datos de entrenamiento y prueba:}
     La partición es temporal (no aleatoria):
@@ -179,11 +193,11 @@ eventualmente enriquecido con rezagos temporales de $Y$ y términos de estratifi
     Cuando se ajusten hiperparámetros en $\mathcal{D}_{\mathrm{train}}$, se prioriza validación \emph{forward-chaining} (bloques temporales sucesivos) en lugar de $k$-fold aleatorio, para no romper la dependencia temporal de \texttt{n\_eventos}~\textcite{ref56}.
 
     \item \textbf{Análisis de componentes principales (PCA):}
-    Dado el bloque climático estandarizado $\mathbf{Z}$, el PCA~\textcite{ref58} resuelve
+    El PCA se emplea como herramienta \emph{exploratoria} de redundancia, no como modelo predictivo final~\textcite{ref58}. Requiere variables cuantitativas, preferiblemente homogenizadas (estandarización o transformación previa) y con $n\gg p$. Dado el bloque climático estandarizado $\mathbf{Z}$, se resuelve
     \[
     \mathbf{Z}^{\mathsf{T}}\mathbf{Z}\,\mathbf{v}_{\ell}=\lambda_{\ell}\mathbf{v}_{\ell},
     \]
-    y las componentes $\mathrm{PC}_{\ell}=\mathbf{Z}\mathbf{v}_{\ell}$ resumen redundancias (temperaturas/vientos). En el EDA, PC1--PC2 explican $\approx 81\%$ de la varianza climática; la precipitación aporta carga relativamente independiente. Sobre el bloque operativo en escala $\log(1+x)$, PC1 concentra la covarianza común de frecuencia, afectación y duración.
+    y las componentes $\mathrm{PC}_{\ell}=\mathbf{Z}\mathbf{v}_{\ell}$ resumen ejes de covarianza (temperaturas/vientos frente a precipitación). La importancia de cada variable en la componente $\ell$ se lee mediante las cargas (loadings) $v_{\ell j}$; en el EDA se interpretan como relevantes aquellas con $|v_{\ell j}|\geq 0{.}40$. Sobre el bloque operativo en escala $\log(1+x)$, PC1 concentra la covarianza común de frecuencia, afectación y duración.
 
     \item \textbf{Métodos de agrupación:}
     Los cuadrantes se segmentan por actividad (cuantiles de $\sum_t \texttt{n\_eventos}$) y, de forma multivariada, por clustering (p.\,ej.\ jerárquico~\textcite{ref60} o $k$-means~\textcite{ref59}) sobre perfiles de frecuencia, duración y clima, con el fin de estratificar el modelado en zonas de distinto riesgo operativo.
