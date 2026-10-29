@@ -6,8 +6,6 @@
 
 
 % additional packages
-\usepackage{lipsum} % for DEMO only
-\usepackage{threeparttable}
 \usepackage{threeparttable}
 \usepackage{siunitx}
 \usepackage[titles]{tocloft} % to modify spacing in toc chapters
@@ -22,10 +20,8 @@
 \usepackage{float} % para usar [H] si quieres fijar la figura
 \usepackage{geometry}
 \usepackage{pdflscape}
-\usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{threeparttable}
 \usepackage{listings}
+\usepackage{multirow}
 \renewcommand{\tabularxcolumn}[1]{m{#1}}
 \usepackage{longtable}
 
@@ -65,8 +61,9 @@
     belowcaptionskip=0.2em
 }
 
-\usepackage{listings}
 \usepackage{xcolor}
+% Marca visible para datos que el equipo debe completar antes de la entrega
+\newcommand{\pendiente}[1]{\textcolor{red}{\textbf{[#1]}}}
 
 \lstdefinestyle{code}{
     basicstyle=\ttfamily\small,
@@ -83,20 +80,20 @@
 
 \renewcommand{\lstlistingname}{Listado}
 \setlength{\cftbeforechapskip}{7pt}
-\setcounter{tocdepth}{4} % ToC depth
+\setcounter{tocdepth}{2} % ToC depth
 
 
 % titles
 \title{Metodología Basada en Métodos de Ciencia de Datos para Pronosticar SAIDI y SAIFI en Redes de Distribución de una Empresa de Energía Eléctrica en el Norte de Santander}
-\thesisHeader{Pontificia Universidad Javeriana Cali \\Facultad de Ingeniería y Ciencias.\\MAESTRÍA EN CIENCIA DE DATOS}
-\academicYear{07-2024/11-2024}
+\thesisHeader{Pontificia Universidad Javeriana Cali \\Facultad de Ingeniería y Ciencias\\Maestría en Ciencia de Datos}
+\academicYear{2026}
 
 % student
 \author{Edwin Henao Ochoa\\
 Cindy Lugo Rozo\\
 Edwin Silva Salas}
 
-% supervisor(s)Zürich
+% supervisor(s)
 \advisor{Sandra Milena Ramírez Buelvas}{Pontificia Universidad Javeriana} % (mandatory)
 %\coadvisor{xxxxx }{xxxxx} 
 % (optional, comment to remove)
@@ -117,7 +114,7 @@ Edwin Silva Salas}}
 
 \sisetup{
   output-decimal-marker = {.},
-  group-separator = {.},
+  group-separator = {\,},
   detect-all = true
 }
 
@@ -153,6 +150,8 @@ Edwin Silva Salas}}
 \newcommand{\urlEtapaCuatroDos}{https://esilvas1.github.io/DataCollection_Tesis_MCD/Scripts/Cindy/v4/Etapa4_02_rezagos_SAIDI.html}
 \newcommand{\urlEtapaCincoUno}{https://esilvas1.github.io/DataCollection_Tesis_MCD/Scripts/Cindy/v4/Etapa5_01_modelo_SAIDI_espacial.html}
 \newcommand{\urlEtapaCincoDos}{https://esilvas1.github.io/DataCollection_Tesis_MCD/Scripts/Cindy/v4/Etapa5_02_modelo_SAIFI_espacial.html}
+\newcommand{\urlEtapaSeisUno}{https://esilvas1.github.io/DataCollection_Tesis_MCD/Scripts/Cindy/v4/Etapa6_01_reporte_priorizacion.html}
+\newcommand{\urlCodigoCierre}{https://github.com/esilvas1/DataCollection_Tesis_MCD/tree/main/Scripts/Cindy/v4}
 
 % Ajustes de espacio
 \titlespacing*{\subsection}{0pt}{10pt plus 2pt minus 2pt}{5pt}
@@ -161,6 +160,11 @@ Edwin Silva Salas}}
 \setlength{\intextsep}{6pt}      % Espacio entre texto y figuras
 \setlength{\textfloatsep}{6pt}   % Espacio entre texto y flotantes
 
+
+% Permite cortar línea después de los guiones bajos de nombres de variables (\texttt{...})
+\let\oldunderscore\_
+\renewcommand{\_}{\oldunderscore\allowbreak}
+\setlength{\emergencystretch}{3em}
 
 \begin{document}
 \renewcommand{\tablename}{Tabla}

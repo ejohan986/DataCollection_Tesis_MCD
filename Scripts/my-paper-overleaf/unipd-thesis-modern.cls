@@ -308,7 +308,7 @@
     \dedicationpage
     
     % insert table of contents
-    {\hypersetup{linkcolor=black}\titlespacing*{\chapter}{0pt}{10pt}{10pt}\tableofcontents}
+    {\hypersetup{linkcolor=black}\titlespacing*{\chapter}{0pt}{10pt}{10pt}\tableofcontents\listoffigures\listoftables}
     \clearpage
     
     % insert abstract
@@ -358,6 +358,8 @@
     \begin{spacing}{1.1}
     \noindent\huge\textbf{\@title}
     \end{spacing}
+    \vspace{2ex}
+    \normalsize Proyecto aplicado para optar al título de Magíster en Ciencia de Datos
     \end{flushleft}
 
     
@@ -373,7 +375,7 @@
     % supervisor
     \vspace{1.7cm}
     \begin{minipage}[t]{7cm}
-        \textsc{Director}\\
+        \textsc{Directora}\\
         {\setlength\parindent{1mm}
         \indent\large{\textbf{\@advisor}}\\
         \indent\small\textbf{\@advisorUniversity}
@@ -403,7 +405,7 @@
 
     \vspace*{\fill}
     \begin{flushleft}
-   % \normalsize\textsc{Año Académico \@academicYear}
+    \normalsize\textsc{Santiago de Cali, \@academicYear}
     \end{flushleft}
     \vspace{5mm}
     

@@ -253,15 +253,154 @@ Informe \texttt{Etapa2\_11\_cargue\_eventos\_semana.html}: agregación de evento
 Informe \texttt{Etapa2\_12\_union\_panel\_semana.html}: unión semanal de clima, eventos y atributos territoriales.
 \href{\urlEtapaDosDoce}{Abrir informe}.
 
+\subsection{Ingeniería de variables para SAIDI y SAIFI}
+\label{app:html-etapa4-01}
+Informe \texttt{Etapa4\_01\_feature\_engineering\_general.html}: exploración de relaciones clima--indicador, matrices de correlación y gráficos de pares sobre el panel cuadrante--semana, como paso previo a la formalización de $SAIFI$ y $SAIDI$ con el denominador de usuarios totales.
+\href{\urlEtapaCuatroUno}{Abrir informe}. \textit{Nota:} es un informe exploratorio previo a la definición final de las respuestas; las fórmulas de trabajo de $SAIFI$ y $SAIDI$ que emplea difieren de las adoptadas, que son las de la ecuación~\eqref{eq:respuestas_saidi_saifi} (Sección~\ref{sec:construccion_respuesta}).
+
+\subsection{Incorporación y selección de rezagos}
+\label{app:html-etapa4-02}
+Informe \texttt{Etapa4\_02\_rezagos\_SAIDI.html}: justificación econométrica de la especificación dinámica $Y_t = X_t\beta + \gamma Y_{t-1} + \delta X_{t-1} + \varepsilon_t$ y evidencia empírica de dependencia temporal para la selección de rezagos.
+\href{\urlEtapaCuatroDos}{Abrir informe}. \textit{Nota:} informe exploratorio; la especificación de rezagos finalmente estimada es la de la Tabla~\ref{tab:particion_variables_modelado}.
+
 \subsection{Modelo espacial de SAIDI}
 \label{app:html-etapa5-01}
 Informe \texttt{Etapa5\_01\_modelo\_SAIDI\_espacial.html}: estimación, validación e interpretación del modelo espacial de SAIDI.
-\href{\urlEtapaCincoUno}{Abrir informe}.
+\href{\urlEtapaCincoUno}{Abrir informe}. \textit{Nota:} informe preliminar con la especificación contemporánea y el panel previo a la corrección de la sismicidad; las cifras definitivas son las de la re-estimación final (Apéndice~\ref{app:codigo-cierre}).
 
 \subsection{Modelo espacial de SAIFI}
 \label{app:html-etapa5-02}
 Informe \texttt{Etapa5\_02\_modelo\_SAIFI\_espacial.html}: estimación, validación e interpretación del modelo espacial de SAIFI.
-\href{\urlEtapaCincoDos}{Abrir informe}.
+\href{\urlEtapaCincoDos}{Abrir informe}. \textit{Nota:} informe preliminar; las cifras definitivas son las de la re-estimación final (Apéndice~\ref{app:codigo-cierre}).
+
+\subsection{Re-estimación final de la Etapa 5}
+\label{app:codigo-cierre}
+Scripts \texttt{Etapa2\_13\_correccion\_sismos.R} (reconstrucción de las variables sísmicas) y \texttt{Etapa5\_03\_reestimacion\_cierre.R} (especificación \emph{ex ante}, pronósticos de referencia, ajuste de hiperparámetros, origen móvil, Diebold--Mariano, modelos espaciales, componente de ocurrencia, atípicos y diccionario de variables). Generan todas las cifras de la Sección~\ref{sec:resultados-etapa5}.
+\href{\urlCodigoCierre}{Abrir carpeta de código}.
+
+\subsection{Reporte técnico de priorización territorial}
+\label{app:html-etapa6-01}
+Informe \texttt{Etapa6\_01\_reporte\_priorizacion.html}: concentración de la afectación por cuadrante, probabilidad semanal de falla, clases de prioridad, mapas y orientaciones de gestión; exporta \texttt{priorizacion\_cuadrantes.csv}.
+\href{\urlEtapaSeisUno}{Abrir informe}.
+
+\section{Catálogo de datos y métricas de integridad}
+\label{app:catalogo}
+
+Este apéndice materializa el catálogo de datos previsto en el OE1. La Tabla~\ref{tab:catalogo_fuentes} documenta, para cada tipo de fuente enunciado en el objetivo, el sistema efectivamente consultado, su cobertura, sus métricas de integridad y sus limitaciones; la Tabla~\ref{tab:catalogo_variables} presenta el diccionario de variables del panel de modelado. El objetivo exige documentar la cobertura, la calidad y las limitaciones de cada fuente: por ello, cuando una fuente se aprovechó solo de manera parcial, la tabla registra explícitamente la limitación que lo explica.
+
+\begin{landscape}
+\begin{table}[!htbp]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.05}
+\caption{Catálogo de fuentes: cobertura, integridad y limitaciones}
+\label{tab:catalogo_fuentes}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.4cm} >{\raggedright\arraybackslash}p{3.2cm} >{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{4.0cm} >{\raggedright\arraybackslash}p{5.3cm} >{\raggedright\arraybackslash}p{2.5cm}@{}}
+\toprule
+\textbf{Fuente del OE1} & \textbf{Sistema o tabla consultada} & \textbf{Cobertura} & \textbf{Métricas de integridad} & \textbf{Limitación documentada} & \textbf{Uso en el modelo} \\
+\midrule
+SCADA/OMS y registros de fallas & BRAE \texttt{QA\_TFDDREGISTRO}; OMS SPARD (\texttt{OMS.MANIOBRAS}); OMS SP7 (CSV mensuales) & 2021--2025; $95\,280$ eventos no excluidos & \texttt{COMPONENTE\_FALLADO} completo en el $100$~\%; emparejamiento con el inventario GIS de $30{.}5$--$31{.}7$~\% (2021--2023), $79{.}8$~\% (2024) y $95{.}0$~\% (2025) & Doble codificación sitio/activo en OMS SPARD (Sección~\ref{sec:delimitacion_temporal_modelado}); la información de los equipos de maniobra supervisados por SCADA llega al estudio a través del registro de eventos del OMS y no como serie de telemedida; solo eventos no excluidos (CREG 015 de 2018); $161$ eventos de exactamente $3$~min ($0{.}41$~\%) por la resolución de minuto & Respuestas $\mathrm{SAIDI}$/$\mathrm{SAIFI}$ y rezagos \\
+\addlinespace[1pt]
+GIS (inventario georreferenciado) & GTECH (\texttt{ccomun}, \texttt{cconectividad\_e}) & $47\,649$ activos; $344$ cuadrantes con red & \texttt{ALTITUD} con $0{.}04$~\% de faltantes; coordenadas completas & Inventario vigente, sin histórico de altas y bajas de activos & Infraestructura, topología y vecindad \\
+\addlinespace[1pt]
+Mantenimientos & \texttt{Fecha\_transformadores.csv} (\texttt{TT2\_FMODIFICACION}, estado \texttt{OPERACION}) & $28\,878$ registros ($25\,399$ en operación); fechas de modificación entre marzo de 2023 y septiembre de 2026 & $0$~\% de faltantes; la fecha del activo más viejo es posterior a la semana del panel en el $93{.}2$~\% de las filas (edad negativa) & Registra la última modificación ($67$~\% de las fechas en 2026) y el número de modificaciones, no la fecha de instalación original ni el tipo de intervención; la ``edad'' mide en realidad la distancia a la última intervención & \texttt{edad\_activo\_*}, \texttt{PROM\_CANT\_MODIFICACIONES} \\
+\addlinespace[1pt]
+Inventarios/SAC (usuarios) & \texttt{QA\_TTC1}; \texttt{cant\_usuarios\_x\_transformador.csv}; \texttt{DATA\_ESTRATO\_SECTOR.csv}; \texttt{data\_usuarios\_totales\_sistema.csv} & 2021--2025, mensual & Meses faltantes de los cuadrantes 258 y 273 imputados con la moda; cuadrantes 68, 140, 333 y 344 ausentes en la fuente (asignados en cero) & Usuarios asociados al transformador y no al punto exacto de conexión & Denominador $UT$, \texttt{usuarios\_afectados}, composición de estrato y sector \\
+\addlinespace[1pt]
+Clima & NASA POWER (reanálisis MERRA-2) & Diario 2021--2025; $100$~\% del área de estudio & $3{.}91$~\% de faltantes en el panel activo~$\times$~día; $0$~\% en el panel cuadrante~$\times$~semana & Resolución espacial gruesa; no captura tormentas convectivas de pocas horas & Clima rezagado y acumulado \\
+\addlinespace[1pt]
+Exposición externa (complementaria) & MODIS MOD13Q1 (NDVI); SGC (catálogo de sismos); UNGRD (\texttt{datos.gov.co}, \texttt{wwkg-r6te}); DANE & 2024--2025; UNGRD solo 2019--2022 & $0$~\% de faltantes en NDVI, sismicidad y estrato; UNGRD constante en $D_{\mathrm{mod}}$ & UNGRD y DANE en escala municipal; dos errores de la sismicidad corregidos (Sección~\ref{sec:sismicidad_sgc}) & NDVI y sismicidad rezagados; UNGRD retirada \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{landscape}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Diccionario de variables del panel de modelado cuadrante~$\times$~semana}
+\label{tab:catalogo_variables}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.6cm} >{\raggedright\arraybackslash}p{5.2cm} >{\raggedright\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{2.4cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Descripción} & \textbf{Unidad} & \textbf{Rol} \\
+\midrule
+\texttt{id\_cuadrante}, \texttt{semana} & Identificación de la fila (cuadrante de la malla; lunes de inicio de la semana) & -- & Llave \\
+\texttt{SAIDI}, \texttt{SAIFI} & Indicadores operativos de afectación (Sección~\ref{sec:construccion_respuesta}) & h; eventos & Respuesta \\
+\texttt{usuarios\_afectados}, \texttt{elementos\_afectados} & Severidad del evento, conocida solo al cerrarlo & usuarios; elementos & Excluida (\emph{ex post}) \\
+\texttt{n\_eventos}, \texttt{duracion\_total} & Insumos de la respuesta & eventos; h & Solo rezagadas \\
+\texttt{temp\_media\_semana}, \texttt{viento\_max\_semana}, \texttt{precip\_total\_semana}, \texttt{precip\_ma4} & Clima semanal NASA POWER & °C; m/s; mm & Predictora ($t-1$) \\
+\texttt{ndvi\_semanal}, \texttt{ndvi\_vecinos} & Índice de vegetación MODIS del cuadrante y de sus vecinos & adimensional & Predictora ($t-1$) \\
+\texttt{n\_sismos\_r50}, \texttt{dist\_sismo\_min\_km\_r50} & Sismos a menos de $50$~km del centroide; distancia al epicentro más cercano de la semana (SGC) & conteo; km & Predictora ($t-1$) \\
+\texttt{n\_eventos\_catastroficos}, \texttt{n\_eventos\_vecinos} & Emergencias UNGRD en el municipio del cuadrante y en los vecinos & conteo & Retirada (constante en $D_{\mathrm{mod}}$) \\
+\texttt{longitud\_red\_km}, \texttt{densidad\_terminales}, \texttt{n\_elementos} & Topología e infraestructura de red & km; nodos/km; elementos & Predictora \\
+\texttt{prop\_estrato\_1}, \texttt{prop\_estrato\_2}, \texttt{prop\_no\_residencial} & Composición de usuarios del cuadrante & proporción & Predictora \\
+\texttt{edad\_activo\_mas\_viejo\_anios}, \texttt{PROM\_CANT\_MODIFICACIONES} & Años desde la última modificación registrada del transformador más antiguo (negativa en el $93{.}2$~\% de las filas) y número medio de modificaciones & años; modificaciones & Predictora \\
+\texttt{SAIDI\_lag1}, \texttt{SAIFI\_lag1}, \texttt{*\_vecinos\_lag1} & Rezago propio y espacial de la respuesta & -- & Predictora \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Robustez de la construcción del indicador operativo}
+\label{app:robustez_indicador}
+
+Para verificar que la forma agregada del numerador de $\mathrm{SAIDI}_{q,s}$ no altera las conclusiones, se recalculó el indicador evento a evento, $\mathrm{SAIDI}^{\mathrm{ev}}_{q,s}=\sum_{i\in(q,s)} D_i\,NU_i\,/\,UT_{m(s)}$, a partir de \texttt{tabla\_eventos\_ajustado.csv}, asignando cada evento a su cuadrante mediante el elemento fallado (\texttt{ELEMENTO\_FALLA\_CUADRANTE\_800}) y a la semana de su fecha de desconexión. La comparación se realizó sobre las $13\,350$ semanas con falla de $D_{\mathrm{mod}}$ para las que existe la versión evento a evento (de $13\,351$); en el $95{.}5$~\% de ellas el número de eventos coincide con el registrado en el panel. La Tabla~\ref{tab:robustez_indicador} resume la concordancia.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Concordancia entre la versión agregada y la versión evento a evento de $\mathrm{SAIDI}_{q,s}$ ($D_{\mathrm{mod}}$, semanas con falla)}
+\label{tab:robustez_indicador}
+\begin{tabular}{l r}
+\toprule
+\textbf{Medida} & \textbf{Valor} \\
+\midrule
+Semanas con falla con un único evento (\%) & $46{.}3$ \\
+Correlación de Spearman entre versiones & $0{.}874$ \\
+Coincidencia del grupo de 20 cuadrantes con mayor $\mathrm{SAIDI}$ promedio (\%) & $65$ \\
+Razón mediana entre la versión agregada y la versión evento a evento & $1{.}80$ \\
+Rango intercuartílico de la razón & $1{.}00$--$4{.}67$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La lectura de la tabla tiene dos partes. En \textit{orden}, ambas versiones son altamente concordantes: la correlación de rangos es de $0{.}87$ y trece de los veinte cuadrantes más críticos coinciden, de modo que la priorización territorial, que es el uso que este trabajo da al indicador, no depende de la forma del numerador. En \textit{nivel}, en cambio, la versión agregada sobrestima la evento a evento en las semanas con varios eventos, porque el producto de la duración total por el total de usuarios afectados excede la suma de los productos por evento; la razón vale exactamente $1$ en las semanas con un único evento ($46{.}3$~\%) y crece con el número de eventos. En consecuencia, los valores de $\mathrm{SAIDI}_{q,s}$ se interpretan como un índice de severidad relativa para ordenar y anticipar la afectación, no como minutos de SAIDI sumables al indicador de la empresa. Para $\mathrm{SAIFI}_{q,s}$ esta diferencia no existe, porque su numerador ya es la suma de los usuarios afectados por evento.
+
+\section{Artefactos reproducibles y reportes técnicos}
+\label{app:reportes_tecnicos}
+
+Este apéndice reúne la evidencia de la cuarta pregunta de sistematización. Los \textit{artefactos reproducibles} del proyecto son: (i)~los informes R Markdown de cada etapa, publicados en HTML (Apéndice~\ref{app:informes-html}); (ii)~el repositorio de código \url{https://github.com/esilvas1/DataCollection_Tesis_MCD}, cuyo archivo \texttt{Scripts/README\_reproducibilidad.md} indica el orden de ejecución de cada etapa, los productos que genera y la verificación numérica de la re-estimación; y (iii)~el entorno de ejecución, documentado con las versiones de R y de los paquetes empleados (\texttt{sessionInfo}), con \texttt{requirements.txt} para los scripts de Python y con un \texttt{Dockerfile} basado en la imagen \texttt{rocker/geospatial}; el script \texttt{instalar\_entorno.R} permite además fijar esas versiones en un archivo \texttt{renv.lock} para reconstruir el mismo entorno en otra máquina. Todos los modelos aleatorios usan semilla fija.
+
+Los \textit{reportes técnicos} alineados con los entregables del proyecto son tres:
+\begin{enumerate}
+    \item \textit{Informe descriptivo y exploratorio}: síntesis del EDA con hallazgos y lineamientos para el modelado (\href{\urlEDA}{informe HTML}; Apéndice~\ref{app:html-eda}).
+    \item \textit{Informe de evaluación de modelos}: estimación, validación, diagnóstico de supuestos y pruebas de robustez de los modelos de SAIDI y SAIFI (\href{\urlEtapaCincoUno}{informe SAIDI} y \href{\urlEtapaCincoDos}{informe SAIFI}; Apéndices~\ref{app:html-etapa5-01} y~\ref{app:html-etapa5-02}).
+    \item \textit{Reporte técnico de variables relevantes y priorización territorial}: ranking de los cuadrantes con mayor contribución esperada a SAIDI y SAIFI, variables que la explican y acciones de gestión asociadas (mantenimiento, poda e inversión), orientado al uso operativo y al seguimiento de la meta regulatoria (\href{\urlEtapaSeisUno}{informe HTML}; Apéndice~\ref{app:html-etapa6-01}).
+\end{enumerate}
+
+El reporte de priorización muestra que la afectación está muy concentrada: $6$ de los $344$ cuadrantes ($1{.}7$~\%) acumulan la mitad del SAIDI operativo de 2024--2025 y $30$ cuadrantes acumulan el $80$~\%; para SAIFI, la mitad se concentra en $9$ cuadrantes y el $80$~\% en $41$. Con ese criterio, $10$ cuadrantes quedan en prioridad~A (los que acumulan el primer $50$~\% de SAIDI o de SAIFI), $37$ en prioridad~B (hasta el $80$~\%) y $297$ en seguimiento. La Tabla~\ref{tab:prioridad_a} lista los cuadrantes de prioridad~A. La probabilidad semanal de falla del clasificador validado está bien calibrada: en el decil de mayor probabilidad la tasa observada de falla en el periodo de prueba es del $90{.}7$~\%, frente al $2{.}0$~\% en el decil más bajo.
+
+\begin{table}[!htbp]
+\centering
+\small
+\caption{Cuadrantes de prioridad A según su participación en la afectación de 2024--2025}
+\label{tab:prioridad_a}
+\begin{tabular}{r l r r r r r}
+\toprule
+\textbf{Cuadrante} & \textbf{Municipio} & \textbf{Rango SAIDI} & \textbf{\% SAIDI} & \textbf{Rango SAIFI} & \textbf{\% SAIFI} & \textbf{P(falla) semanal} \\
+\midrule
+117 & Cúcuta     & 1  & 30.5 & 1  & 17.7 & 98~\% \\
+107 & Los Patios & 2  & 7.0  & 2  & 7.9  & 96~\% \\
+296 & Tibú       & 3  & 4.0  & 8  & 2.5  & 68~\% \\
+116 & Cúcuta     & 4  & 3.4  & 6  & 3.3  & 93~\% \\
+126 & Cúcuta     & 5  & 3.0  & 4  & 4.2  & 98~\% \\
+198 & Cúcuta     & 6  & 2.4  & 10 & 2.3  & 69~\% \\
+310 & Tibú       & 9  & 1.8  & 3  & 5.6  & 78~\% \\
+203 & Aguachica  & 11 & 1.7  & 5  & 3.9  & 89~\% \\
+38  & Pamplona   & 18 & 1.1  & 9  & 2.4  & 86~\% \\
+190 & Ocaña      & 42 & 0.4  & 7  & 2.6  & 60~\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\noindent\footnotesize\textit{Nota:} participación en la suma de los indicadores operativos por cuadrante--semana; se interpreta como orden relativo y no como fracción del indicador regulatorio (Apéndice~\ref{app:robustez_indicador}). P(falla): probabilidad media pronosticada en las $16$ semanas de prueba.
+\end{table}
 
 \section{Muestra completa de tablas base del proyecto}
 \label{app:muestra-tablas-base}
@@ -464,13 +603,13 @@ Esta sección reúne, en cuadrículas de cuatro figuras por página, las visuali
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/grafico_datos_faltantes_por_variable.png}
-    \caption{Porcentaje de valores faltantes por variable en el panel consolidado ($N = 87{.}007{.}074$).}
+    \caption{Porcentaje de valores faltantes por variable en el panel consolidado ($N = 87\,007\,074$).}
     \label{fig:faltantes_por_variable}
 \end{subfigure}\hfill
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/heatmap_datos_faltantes_agrupada.png}
-    \caption{Completitud de la tabla agrupada por fila y variable ($N_{\mathrm{agr}} = 90{.}128$; muestra de $50$ filas).}
+    \caption{Completitud de la tabla agrupada por fila y variable ($N_{\mathrm{agr}} = 90\,128$; muestra de $50$ filas).}
     \label{fig:heatmap_faltantes_agrupada}
 \end{subfigure}
 
@@ -478,7 +617,7 @@ Esta sección reúne, en cuadrículas de cuatro figuras por página, las visuali
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/boxplot_valores_extremos_clima.png}
-    \caption{Distribución de las variables climáticas: mediana y extremos (muestra de $200{.}000$ observaciones).}
+    \caption{Distribución de las variables climáticas: mediana y extremos (muestra de $200\,000$ observaciones).}
     \label{fig:boxplot_clima}
 \end{subfigure}\hfill
 \begin{subfigure}{0.48\textwidth}
@@ -496,7 +635,7 @@ Esta sección reúne, en cuadrículas de cuatro figuras por página, las visuali
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/boxplot_valores_extremos_clima_agrupada.png}
-    \caption{Distribución de las variables climáticas semanales: mediana y extremos ($N_{\mathrm{agr}} = 90{.}128$).}
+    \caption{Distribución de las variables climáticas semanales: mediana y extremos ($N_{\mathrm{agr}} = 90\,128$).}
     \label{fig:boxplot_clima_agrupada}
 \end{subfigure}\hfill
 \begin{subfigure}{0.48\textwidth}
@@ -510,7 +649,7 @@ Esta sección reúne, en cuadrículas de cuatro figuras por página, las visuali
 \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=\textwidth]{img/boxplot_descriptivo_agrupada.png}
-    \caption{Distribución de las variables numéricas de la tabla agrupada: mediana y extremos ($N_{\mathrm{agr}} = 90{.}128$).}
+    \caption{Distribución de las variables numéricas de la tabla agrupada: mediana y extremos ($N_{\mathrm{agr}} = 90\,128$).}
     \label{fig:boxplot_descriptivo_agrupada}
 \end{subfigure}\hfill
 \begin{subfigure}{0.48\textwidth}
@@ -541,6 +680,209 @@ Esta sección reúne, en cuadrículas de cuatro figuras por página, las visuali
 \label{fig:grid_eda_3}
 \end{figure}
 
+\section{Figuras complementarias del análisis exploratorio}
+\label{app:figuras-eda}
+
+Este apéndice reúne las figuras del análisis exploratorio (Capítulo~\ref{sec:resultados}, Etapa~3) que documentan los hallazgos descritos en el texto pero no sustentan por sí mismas una decisión metodológica. Las figuras que sí lo hacen se conservan en el cuerpo del documento.
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/histograma_valores_extremos_clima.png}
+        \caption{Distribución de las variables climáticas: forma y cola (muestra de $200\,000$ observaciones).}
+        \label{fig:histograma_clima}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/histograma_valores_extremos_evento.png}
+        \caption{Distribución de la severidad y continuidad en días con evento: forma y cola.}
+        \label{fig:histograma_evento}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/histograma_valores_extremos_clima_agrupada.png}
+        \caption{Distribución de las variables climáticas semanales: forma y cola ($N_{\mathrm{agr}} = 90\,128$).}
+        \label{fig:histograma_clima_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/histograma_valores_extremos_evento_agrupada.png}
+        \caption{Distribución de la severidad y continuidad en semanas con evento: forma y cola.}
+        \label{fig:histograma_evento_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/histograma_descriptivo_agrupada.png}
+        \caption{Distribución de las variables numéricas de la tabla agrupada: forma y cola ($N_{\mathrm{agr}} = 90\,128$).}
+        \label{fig:histograma_descriptivo_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/curvas_densidad_clima_agrupada.png}
+        \caption{Forma de la distribución de las variables climáticas semanales ($N_{\mathrm{agr}} = 90\,128$).}
+        \label{fig:densidad_clima_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.85\textwidth]{img/grafico_barras_actividad_agrupada.png}
+        \caption{Frecuencia de semanas-cuadrante según actividad de eventos ($N_{\mathrm{agr}} = 90\,128$).}
+        \label{fig:barras_actividad_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/curvas_densidad_evento_agrupada.png}
+        \caption{Distribución de la severidad y continuidad en escala logarítmica desplazada (semanas con evento).}
+        \label{fig:densidad_evento_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/distribucion_densidad_precipitacion_agrupada.png}
+        \caption{Distribución de la precipitación acumulada semanal en escala original y logarítmica desplazada ($N_{\mathrm{agr}} = 90\,128$).}
+        \label{fig:densidad_precipitacion_agrupada}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/serie_semanal_eventos_agrupada.png}
+        \caption{Evolución semanal de los eventos de interrupción (suma territorial), 2021--2025.}
+        \label{fig:serie_semanal_eventos}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.80\textwidth]{img/eventos_por_anio_agrupada.png}
+        \caption{Total anual de eventos de interrupción sobre la tabla agrupada.}
+        \label{fig:eventos_por_anio}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/estacionalidad_mensual_eventos_agrupada.png}
+        \caption{Distribución del total semanal de eventos según mes calendario (2021--2025).}
+        \label{fig:estacionalidad_mensual}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/acf_serie_semanal_agrupada.png}
+        \caption{Persistencia y estructura temporal de la serie semanal de eventos (rezagos en semanas).}
+        \label{fig:acf_serie_semanal}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/serie_severidad_semanal_agrupada.png}
+        \caption{Evolución semanal de usuarios afectados y duración acumulada.}
+        \label{fig:serie_severidad_semanal}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/cuadrantes_activos_semana_agrupada.png}
+        \caption{Número de cuadrantes con al menos un evento por semana (extensión territorial de la actividad).}
+        \label{fig:cuadrantes_activos_semana}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/estacionalidad_mensual_patrones_mod.png}
+        \caption{Estacionalidad mensual del total semanal de eventos en $D_{\mathrm{mod}}$.}
+        \label{fig:estacionalidad_patrones_mod}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.85\textwidth]{img/ranking_cuadrantes_patrones_mod.png}
+        \caption{Quince cuadrantes con mayor número acumulado de eventos en $D_{\mathrm{mod}}$.}
+        \label{fig:ranking_cuadrantes_mod}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.85\textwidth]{img/dispersion_precip_eventos_patrones_mod.png}
+        \caption{Relación entre precipitación semanal y frecuencia de eventos por cuadrante en $D_{\mathrm{mod}}$.}
+        \label{fig:dispersion_precip_mod}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.75\textwidth]{img/segmentacion_cuadrantes_patrones_mod.png}
+        \caption{Segmentación de cuadrantes por nivel de actividad acumulada en $D_{\mathrm{mod}}$.}
+        \label{fig:segmentacion_mod}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.85\textwidth]{img/heatmap_correlacion_clima_mod.png}
+        \caption{Correlaciones de Spearman en el bloque climático semanal ($D_{\mathrm{mod}}$).}
+        \label{fig:heatmap_cor_clima}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.72\textwidth]{img/heatmap_correlacion_operativo_mod.png}
+        \caption{Correlaciones de Spearman entre variables operativas en $D_{\mathrm{mod}}$.}
+        \label{fig:heatmap_cor_operativo}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/barras_correlacion_clima_operativo_mod.png}
+        \caption{Coeficientes de Spearman entre variables climáticas y operativas en $D_{\mathrm{mod}}$.}
+        \label{fig:barras_cor_clima_operativo}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.92\textwidth]{img/heatmap_correlacion_condicionado_mod.png}
+        \caption{Correlaciones de Spearman en semanas-cuadrante con \texttt{n\_eventos} $> 0$ ($n = 13\,351$).}
+        \label{fig:heatmap_cor_condicionado}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.95\textwidth]{img/dendrograma_clima_multivariado_mod.png}
+        \caption{Agrupamiento de redundancias entre variables climáticas (Sección~\ref{sec:metodos-modelos}).}
+        \label{fig:dendrograma_clima}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.82\textwidth]{img/glm_coef_clima_multivariado_mod.png}
+        \caption{Efecto conjunto del clima reducido sobre la frecuencia de eventos (diagnóstico EDA).}
+        \label{fig:glm_coef_multivariado}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.88\textwidth]{img/heatmap_perfiles_nivel_segmentacion_mod.png}
+        \caption{Perfil normalizado por nivel de actividad (eventos, usuarios, duración, semanas activas, clima).}
+        \label{fig:heatmap_perfiles_segmentacion}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.85\textwidth]{img/barras_eventos_anio_nivel_segmentacion_mod.png}
+        \caption{Eventos acumulados por nivel de actividad y año en $D_{\mathrm{mod}}$.}
+        \label{fig:barras_anio_nivel_segmentacion}
+    \end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \includegraphics[width=0.88\textwidth]{img/heatmap_perfiles_cluster_segmentacion_mod.png}
+        \caption{Perfil medio por cluster de cuadrantes (variables operativas y climáticas).}
+        \label{fig:heatmap_cluster_segmentacion}
+    \end{figure}
+
+\clearpage
+
 \section{Análisis de componentes principales (PCA) exploratorio}
 \label{app:pca-exploratorio}
 
@@ -548,7 +890,7 @@ El equipo realizó un ejercicio de PCA exploratorio sobre los bloques climático
 
 \subsection{PCA exploratorio del bloque climático}
 
-\subparagraph{Variables de entrada.} Ingresan las siete variables climáticas semanales de $D_{\mathrm{mod}}$ ($n = 36{.}120$ filas cuadrante~$\times$~semana; $p = 7$):
+\subparagraph{Variables de entrada.} Ingresan las siete variables climáticas semanales de $D_{\mathrm{mod}}$ ($n = 36\,120$ filas cuadrante~$\times$~semana; $p = 7$):
 \texttt{temp\_media\_semana}, \texttt{temp\_max\_semana}, \texttt{temp\_min\_semana}, \texttt{humedad\_media\_semana}, \texttt{viento\_medio\_semana}, \texttt{viento\_max\_semana} y \texttt{precip\_total\_semana}.
 
 \subparagraph{Condiciones de aplicación.} Las siete son cuantitativas continuas; $n\gg p$; no hay faltantes en $D_{\mathrm{mod}}$; y se homogenizan mediante estandarización ($z$-scores) porque tienen distintas unidades (\textdegree C, \%, m/s, mm). El PCA se ejecuta sobre la matriz de correlaciones implícita en la estandarización (\texttt{prcomp} sobre la matriz centrada y escalada).
@@ -585,7 +927,7 @@ En síntesis, las temperaturas (y, en sentido opuesto, el viento) concentran el 
 
 \subsection{PCA exploratorio del bloque operativo}
 
-De forma análoga, se aplicó un PCA exploratorio al bloque operativo de $D_{\mathrm{mod}}$ para delimitar dimensiones de impacto, no para construir predictoras. Ingresan las cuatro métricas \texttt{n\_eventos}, \texttt{usuarios\_afectados}, \texttt{elementos\_afectados} y \texttt{duracion\_total} ($n = 36{.}120$; $p = 4$), tras transformación logarítmica desplazada y estandarización, dadas la cero-inflación, la asimetría y las distintas escalas.
+De forma análoga, se aplicó un PCA exploratorio al bloque operativo de $D_{\mathrm{mod}}$ para delimitar dimensiones de impacto, no para construir predictoras. Ingresan las cuatro métricas \texttt{n\_eventos}, \texttt{usuarios\_afectados}, \texttt{elementos\_afectados} y \texttt{duracion\_total} ($n = 36\,120$; $p = 4$), tras transformación logarítmica desplazada y estandarización, dadas la cero-inflación, la asimetría y las distintas escalas.
 
 PC1 concentra el $83{.}8$~\% de la varianza, con cargas elevadas y del mismo signo en las cuatro variables (Tabla~\ref{tab:pca_loadings_operativo}; Figura~\ref{fig:pca_loadings_operativo}): las más importantes son \texttt{usuarios\_afectados} ($0{.}53$) y \texttt{n\_eventos} ($0{.}52$), seguidas de \texttt{elementos\_afectados} ($0{.}50$) y \texttt{duracion\_total} ($0{.}45$). PC2 ($11{.}9$~\%; acumulado $95{.}7$~\%) contrasta duración ($0{.}81$) frente a afectación (\texttt{elementos\_afectados} $-0{.}48$; \texttt{usuarios\_afectados} $-0{.}33$). Este resultado, junto con la evaluación multivariada del cuerpo del documento, respalda no emplear simultáneamente las cuatro variables operativas como respuestas ni como predictoras, y construir $SAIFI$ y $SAIDI$ en la Etapa~4 a partir de \texttt{usuarios\_afectados} y \texttt{duracion\_total}.
 
